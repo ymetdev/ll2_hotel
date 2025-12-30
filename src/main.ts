@@ -2,11 +2,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common'; // <-- 1. เพิ่มการ Import
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // 1. จัดการเรื่อง BigInt (เพื่อให้ JSON ส่งค่า BigInt เป็น String ได้ ไม่ Error)
+  // 1. จัดการเรื่อง BigInt
   (BigInt.prototype as any).toJSON = function () {
     return this.toString();
   };
@@ -16,14 +17,24 @@ async function bootstrap() {
     .setTitle('Hotel Booking API')
     .setDescription('API สำหรับระบบจัดการโรงแรม (Room, Booking, Auth)')
     .setVersion('1.0')
-    .addBearerAuth() // รองรับการใส่ Token ในหน้าเว็บ
+    .addBearerAuth()
     .build();
-
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document); // ทางเข้าคือ http://localhost:3000/api
+  SwaggerModule.setup('api', app, document);
 
-  // 3. เปิด CORS (เผื่อเพื่อนเขียนหน้าบ้านมาต่อ)
+  // 3. เปิด CORS
   app.enableCors();
+
+  // --- เพิ่มส่วนนี้เข้าไปครับ ---
+  // 4. เปิดใช้งาน Validation ทั่วทั้งระบบ
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // ตัด Property ที่ไม่ได้นิยามใน DTO ทิ้งไป
+      forbidNonWhitelisted: true, // ถ้าส่งค่าที่ไม่อยู่ใน DTO มา ให้ Error ทันที
+      transform: true, // สำคัญมาก: เพื่อให้ @Transform ใน DTO ทำงาน
+    }),
+  );
+  // -------------------------
 
   await app.listen(3000);
   console.log(`Application is running on: http://localhost:3000/api`);
