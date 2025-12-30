@@ -1,0 +1,15 @@
+services:
+  db:
+    image: mariadb:latest
+    environment:
+      # ตั้งรหัสผ่าน root เป็นค่าว่าง (สำหรับ MariaDB ต้องใช้ ALLOW_EMPTY_PASSWORD)
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
+      # ตั้งชื่อ Database ให้ตรงกับใน PrismaService ของคุณ
+      MARIADB_DATABASE: ll2_hotel
+    ports:
+      - '3306:3306'
+
+  adminer:
+    image: adminer
+    ports:
+      - '8080:8080'
