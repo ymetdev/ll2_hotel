@@ -1,6 +1,19 @@
+import { IsString, IsOptional, IsNumber, IsNotEmpty } from 'class-validator';
+
 export class CreateRoomDto {
+  @IsString()
+  @IsNotEmpty()
   name: string;
+
+  @IsString()
+  @IsOptional()
   description?: string;
-  price_per_night: number; // หรือ String ถ้าต้องการความแม่นยำของ Decimal
+
+  @IsNumber()
+  @IsNotEmpty()
+  price_per_night: number;
+
+  @IsNumber()
+  @IsNotEmpty()
   total_rooms: number;
 }

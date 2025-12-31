@@ -1,5 +1,15 @@
+import { IsInt, IsNotEmpty, IsDateString } from 'class-validator';
+
 export class CreateBookingDto {
+  @IsInt() // ระบุว่าเป็นเลขจำนวนเต็ม
+  @IsNotEmpty()
   room_id: number;
-  check_in_date: string; // รับเป็น ISO String เช่น "2025-12-01"
-  check_out_date: string; // รับเป็น ISO String เช่น "2025-12-05"
+
+  @IsDateString() // ตรวจสอบว่าต้องเป็นรูปแบบวันที่ ISO (เช่น 2025-12-01)
+  @IsNotEmpty()
+  check_in_date: string;
+
+  @IsDateString()
+  @IsNotEmpty()
+  check_out_date: string;
 }
