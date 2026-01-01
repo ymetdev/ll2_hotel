@@ -36,8 +36,12 @@ export class BookingController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto) {
-    return this.bookingService.update(+id, updateBookingDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateBookingDto: UpdateBookingDto,
+    @Request() req,
+  ) {
+    return this.bookingService.update(+id, updateBookingDto, req.user);
   }
 
   @Delete(':id')

@@ -104,24 +104,42 @@ export class BookingService {
     return booking;
   }
 
-  async update(id: number, dto: UpdateBookingDto) {
+  async update(id: number, dto: UpdateBookingDto, user: any) {
+    const booking = await this.prisma.bookings.findUnique({
+      where: { id: BigInt(id) },
+    });
+
+    if (!booking) throw new NotFoundException('ไม่พบการจอง');
+
+    const isOwner = booking.user_id === BigInt(user.sub);
+    const isAdmin = user.role === 'admin';
+
+    // ---------- USER ----------
+    if (!isAdmin) {
+      if (!isOwner) {
+        throw new BadRequestException('คุณไม่มีสิทธิ์แก้ไขการจองนี้');
+      }
+
+      // user ทำได้แค่ cancel เท่านั้น
+      if (dto.status !== 'cancelled') {
+        throw new BadRequestException('ผู้ใช้สามารถยกเลิกการจองเท่านั้น');
+      }
+
+      return this.prisma.bookings.update({
+        where: { id: BigInt(id) },
+        data: { status: 'cancelled' as any },
+      });
+    }
+
+    // ---------- ADMIN ----------
     const data: any = {};
 
-    if (dto.room_id !== undefined) {
-      data.room_id = BigInt(dto.room_id);
-    }
-
-    if (dto.check_in_date !== undefined) {
+    if (dto.room_id !== undefined) data.room_id = BigInt(dto.room_id);
+    if (dto.check_in_date !== undefined)
       data.check_in = new Date(dto.check_in_date);
-    }
-
-    if (dto.check_out_date !== undefined) {
+    if (dto.check_out_date !== undefined)
       data.check_out = new Date(dto.check_out_date);
-    }
-
-    if (dto.status !== undefined) {
-      data.status = dto.status as any;
-    }
+    if (dto.status !== undefined) data.status = dto.status as any;
 
     return this.prisma.bookings.update({
       where: { id: BigInt(id) },
