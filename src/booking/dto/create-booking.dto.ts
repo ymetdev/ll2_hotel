@@ -1,15 +1,18 @@
-import { IsInt, IsNotEmpty, IsDateString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsDateString, IsIn } from 'class-validator';
 
 export class CreateBookingDto {
-  @IsInt() // ระบุว่าเป็นเลขจำนวนเต็ม
+  @IsInt()
   @IsNotEmpty()
   room_id: number;
 
-  @IsDateString() // ตรวจสอบว่าต้องเป็นรูปแบบวันที่ ISO (เช่น 2025-12-01)
+  @IsDateString()
   @IsNotEmpty()
   check_in_date: string;
 
   @IsDateString()
   @IsNotEmpty()
   check_out_date: string;
+
+  @IsIn(['cancelled', 'confirmed', 'pending'])
+  status: string;
 }
