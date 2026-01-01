@@ -19,9 +19,4 @@ export class CreateRoomDto {
   @IsNotEmpty()
   @IsPositive() // 👈 ต้อง > 0
   price_per_night: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  @IsPositive() // 👈 ต้อง > 0
-  total_rooms: number;
 }

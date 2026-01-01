@@ -18,7 +18,7 @@ export class RoomService {
         name: createRoomDto.name,
         description: createRoomDto.description,
         price_per_night: createRoomDto.price_per_night,
-        total_rooms: createRoomDto.total_rooms,
+
         // เปลี่ยนจาก 'available' เป็น 'active' ให้ตรงตาม Schema ของคุณ
         status: 'inactive' as any,
       },
