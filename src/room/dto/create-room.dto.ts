@@ -1,4 +1,10 @@
-import { IsString, IsOptional, IsNumber, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNumber,
+  IsNotEmpty,
+  IsPositive,
+} from 'class-validator';
 
 export class CreateRoomDto {
   @IsString()
@@ -11,9 +17,11 @@ export class CreateRoomDto {
 
   @IsNumber()
   @IsNotEmpty()
+  @IsPositive() // 👈 ต้อง > 0
   price_per_night: number;
 
   @IsNumber()
   @IsNotEmpty()
+  @IsPositive() // 👈 ต้อง > 0
   total_rooms: number;
 }
