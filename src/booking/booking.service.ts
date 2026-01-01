@@ -104,10 +104,28 @@ export class BookingService {
     return booking;
   }
 
-  async update(id: number, updateBookingDto: UpdateBookingDto) {
-    return await this.prisma.bookings.update({
+  async update(id: number, dto: UpdateBookingDto) {
+    const data: any = {};
+
+    if (dto.room_id !== undefined) {
+      data.room_id = BigInt(dto.room_id);
+    }
+
+    if (dto.check_in_date !== undefined) {
+      data.check_in = new Date(dto.check_in_date);
+    }
+
+    if (dto.check_out_date !== undefined) {
+      data.check_out = new Date(dto.check_out_date);
+    }
+
+    if (dto.status !== undefined) {
+      data.status = dto.status as any;
+    }
+
+    return this.prisma.bookings.update({
       where: { id: BigInt(id) },
-      data: updateBookingDto,
+      data,
     });
   }
 

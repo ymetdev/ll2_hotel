@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsDateString, IsIn } from 'class-validator';
+import { IsInt, IsNotEmpty, IsDateString } from 'class-validator';
 
 export class CreateBookingDto {
   @IsInt()
@@ -12,7 +12,4 @@ export class CreateBookingDto {
   @IsDateString()
   @IsNotEmpty()
   check_out_date: string;
-
-  @IsIn(['cancelled', 'confirmed', 'pending'])
-  status: string;
 }
